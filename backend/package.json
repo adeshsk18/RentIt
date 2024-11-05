@@ -4,8 +4,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "DEV_MODE=true node src/server.js",
-    "dev": "DEV_MODE=false nodemon src/server.js",
+    "start": "DEV_MODE=false node src/server.js",
+    "dev": "DEV_MODE=true nodemon src/server.js",
     "build": "echo 'No Build'" 
   },
   "keywords": [],
