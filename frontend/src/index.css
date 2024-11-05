@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #8a9f78; /* Fern green */
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3b6b48; /* Leafy green for hover */
+}
