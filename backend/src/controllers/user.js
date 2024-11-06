@@ -1,4 +1,3 @@
-import { request } from "express";
 import mongoose from "mongoose";
 
 import { getReceiverSocketId, io } from "../config/socket.js";
@@ -292,7 +291,7 @@ export const getUserRequests = controllerWrapper(async (req, res) => {
     baseProjection
   ).populate([propertyPopulate, { path: "listedBy", select: userInfoKeys }]);
 
-  if (req.user.type === "owner") {
+  if (req.user.type !== "user") {
     const ownerRequests = RequestModel.find(
       { listedBy: req.user._id },
       baseProjection

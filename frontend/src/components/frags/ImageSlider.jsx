@@ -73,7 +73,7 @@ const ImageSlider = ({ images, title }) => {
           <Slider {...settings}>
             {images.map((image, index) => (
               <div key={index} className="relative w-full">
-                <div className="relative aspect-[4/5] md:aspect-[16/10]">
+                <div className="relative aspect-[16/10]">
                   <img
                     src={getMediaPath(image)}
                     alt={`${title}-${index + 1}`}

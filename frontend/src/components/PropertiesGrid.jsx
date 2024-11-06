@@ -23,7 +23,7 @@ const PropertiesGrid = ({ properties, title = "Available Properties" }) => {
 
                 <CardContent className="flex flex-grow flex-col p-4">
                   <div className="mb-3">
-                    <h2 className="mb-1 line-clamp-1 text-lg font-semibold text-gray-800 transition-colors group-hover:text-blue-600">
+                    <h2 className="mb-1 line-clamp-1 text-lg font-semibold capitalize text-gray-800 transition-colors group-hover:text-blue-600">
                       {property.title}
                     </h2>
                     <div className="flex items-center text-gray-600">
