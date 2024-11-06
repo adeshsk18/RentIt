@@ -38,7 +38,7 @@ app.use("/list", ListingsRoute);
 
 const projectRootDir = path.resolve("..");
 
-if (process.env.DEV_MODE === true) {
+if (process.env.DEV_MODE) {
   app.get("/", (_, res) => {
     res.send("HRA-private-API-v0.1.0b1");
   });
