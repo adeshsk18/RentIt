@@ -1,5 +1,15 @@
 node_modules
-.env
+*.env
+.env 
+
+# source: https://github.com/emanhamed/Houses-dataset
+hdataset
+.ipynb_checkpoints
+secret.json
+random_address_dump.json
+*.log
+updatetokens.py
+pickpr.json
 
 todo.md
 private 

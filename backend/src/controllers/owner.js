@@ -15,7 +15,6 @@ import {
   validateTitle,
 } from "../lib/validators.js";
 import { PropertyModel } from "../models/property.js";
-import { RequestModel } from "../models/propertyRequest.js";
 
 const validStatuses = ["unlisted", "available"];
 
@@ -121,6 +120,14 @@ export const updateProperty = controllerWrapper(async (req, res) => {
 
   try {
     validateImages(totalImages);
+    if (
+      property.status === "occupied" &&
+      new Date() <= new Date(property.releaseDate)
+    ) {
+      throw new ValidationError(
+        `The Property is occupied & can't edit it ${new Date(property.releaseDate).toDateString()}.`
+      );
+    }
   } catch (err) {
     newImages.forEach((imagePath) => {
       deleteImage(imagePath);
