@@ -10,8 +10,8 @@ MERN stack house rental app with realtime chat & request updates using socket.io
 ## Screenshots
 
 <p align="center">
-    <a href="ss/home.png"><img src="ss/home.png" alt="Home" style="height: 60vh; margin-right: 10px;"></a>
-    <a href="ss/profile.png"><img src="ss/profile.png" alt="Profile" style="height: 60vh; margin-right: 10px;"></a>
+    <a href="ss/home.png"><img src="ss/home.png" alt="Home" style="height: 90%; width: 90%; margin-right: 10px;"></a>
+    <a href="ss/profile.png"><img src="ss/profile.png" alt="Profile" style="height: 90%; width: 90%; margin-right: 10px;"></a>
 <!--     <a href="ss/search.png"><img src="ss/search.png" alt="Search" style="height: 300px;"></a> -->
 </p>
 
