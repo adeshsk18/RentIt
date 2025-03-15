@@ -52,6 +52,7 @@ const AuthForm = ({
           type="email"
           name="email"
           label="Email"
+          placeholder="Enter your email address"
           value={formData.email}
           onChange={handleChange}
           required
@@ -59,7 +60,12 @@ const AuthForm = ({
           className="bg-white"
         />
 
-        <PasswordInput onChange={handleChange} value={formData.password} />
+        <PasswordInput 
+          onChange={handleChange} 
+          value={formData.password}
+          label="Password"
+          placeholder="Enter your password"
+        />
         <button
           type="submit"
           className="w-full rounded-lg bg-blue-500 px-4 py-2 font-semibold text-white transition duration-200 hover:bg-blue-600"

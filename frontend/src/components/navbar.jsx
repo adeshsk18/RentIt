@@ -69,10 +69,32 @@ const MobileMenuItem = ({ to, children, icon: Icon, onClick }) => (
   </MenuItem>
 );
 
+const UserGreeting = () => {
+  const { userData } = useAuthStore();
+  console.log('UserGreeting - userData:', userData);
+  
+  if (!userData?.name) {
+    console.log('UserGreeting - No user name found');
+    return null;
+  }
+  
+  const firstName = userData.name.split(' ')[0];
+  console.log('UserGreeting - firstName:', firstName);
+  
+  return (
+    <span className="text-white font-medium mr-4">
+      Hello, {firstName}!
+    </span>
+  );
+};
+
 const Navbar = () => {
   const { userData } = useAuthStore();
+  console.log('Navbar - Full userData:', userData);
   const isAuthenticated = userData !== null;
   const userType = userData?.type;
+  const userName = userData?.name || '';
+  console.log('Navbar - userName:', userName);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const [reqNotifs, setRequestNotifs] = useState(0);
@@ -230,6 +252,7 @@ const Navbar = () => {
           </Link>
 
           <div className="hidden items-center gap-2 md:flex">
+            <UserGreeting />
             <NavLinkWithBadge to="/" icon={Home}>
               Home
             </NavLinkWithBadge>
@@ -271,7 +294,8 @@ const Navbar = () => {
             )}
           </div>
 
-          <div className="md:hidden">
+          <div className="flex items-center gap-4 md:hidden">
+            <UserGreeting />
             <button
               onClick={handleMenuClick}
               className="rounded-lg p-2 text-white transition-colors duration-200 hover:bg-white/10 active:bg-white/20"

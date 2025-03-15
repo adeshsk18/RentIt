@@ -19,6 +19,12 @@ const useSocketStore = create((set, get) => ({
       query: {
         userId: userData.uid,
       },
+      transports: ['websocket', 'polling'],
+      withCredentials: true,
+      forceNew: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000
     });
 
     socket.on("connect", () => {

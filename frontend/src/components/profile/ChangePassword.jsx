@@ -51,11 +51,15 @@ const ChangePassword = () => {
               value={passwords.currentPassword}
               name="currentPassword"
               onChange={handleChange}
+              label="Current Password"
+              placeholder="Enter your current password"
             />
             <PasswordInput
               value={passwords.newPassword}
               name="newPassword"
               onChange={handleChange}
+              label="New Password"
+              placeholder="Enter your new password"
             />
           </form>
         </DialogContent>

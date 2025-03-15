@@ -44,6 +44,7 @@ export const loginUser = controllerWrapper(async (req, res) => {
       userData: {
         uid: user._id,
         type: user.type,
+        name: user.name
       },
     });
   } else {
