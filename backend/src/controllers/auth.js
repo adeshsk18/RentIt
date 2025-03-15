@@ -4,11 +4,8 @@ import { UserModel } from "../models/user.js";
 import { createNewUser } from "./user.js";
 
 export const registerUser = controllerWrapper(async (req, res) => {
-  const { name, email, password, passphrase } = req.body;
+  const { name, email, password } = req.body;
 
-  if (passphrase.toUpperCase() !== process.env.REGISTER_PASSPHRASE) {
-    throw new ValidationError("Provided Pass Phrase is Invalid.");
-  }
   const existingUser = await UserModel.findOne({ email });
 
   if (existingUser) {

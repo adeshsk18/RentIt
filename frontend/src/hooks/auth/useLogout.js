@@ -17,6 +17,7 @@ const useLogout = () => {
       toast.error(getResponseMsg(error));
     } finally {
       removeAuthData();
+      sessionStorage.removeItem("user_type");
       setLoading(false);
     }
 

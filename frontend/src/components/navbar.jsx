@@ -39,7 +39,7 @@ const LogoutButton = () => {
       {loading ? (
         <CircularProgress size={20} className="text-white" />
       ) : (
-        <LogOut size={20} />
+        <LogOut size={20} className="text-white" />
       )}
       <span className="font-medium text-white">
         {loading ? "Logging out..." : "Logout"}

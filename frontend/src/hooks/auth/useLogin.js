@@ -27,6 +27,8 @@ const useLogin = () => {
       const { data } = await api.post("/auth/login", formData);
 
       setAuthData(data.userData, data.token);
+      // Store user type in sessionStorage
+      sessionStorage.setItem("user_type", data.userData.type);
 
       toast.success(data.message);
     } catch (err) {

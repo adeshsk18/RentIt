@@ -9,7 +9,6 @@ const Register = () => {
     lastName: "",
     email: "",
     password: "",
-    passphrase: "",
   });
 
   const { loading, register } = useRegister();

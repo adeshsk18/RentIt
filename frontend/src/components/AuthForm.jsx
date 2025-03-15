@@ -44,22 +44,6 @@ const AuthForm = ({
               fullWidth
               className="bg-white"
             />
-            <Tooltip
-              title="I ain't doing email OTP verification for this."
-              arrow
-            >
-              <TextField
-                variant="outlined"
-                type="password"
-                name="passphrase"
-                label="Pass Phrase"
-                required
-                value={formData.passphrase}
-                onChange={handleChange}
-                fullWidth
-                className="bg-white"
-              />
-            </Tooltip>
           </>
         )}
 

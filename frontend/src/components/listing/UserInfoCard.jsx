@@ -8,7 +8,7 @@ const UserInfoCard = ({ user }) => {
   const { name, username, profilePicture, legalVerificationID, contactNumber } =
     user;
 
-  const showContact = !!localStorage.getItem("user_type");
+  const showContact = !!sessionStorage.getItem("user_type");
   return (
     <NavLink to={`/u/${username}`} className="inline-block">
       <div className="flex">

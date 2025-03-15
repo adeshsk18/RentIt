@@ -15,19 +15,19 @@ import { UserRoute } from "./routes/user.js";
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  })
-);
+
+// CORS Configuration
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 
 app.use("/auth", AuthRoute);
-
 app.use("/admin", AdminRoute);
 app.use("/owner", OwnerRoute);
 app.use("/user", UserRoute);
-
 app.use("/list", ListingsRoute);
 
 //// for local multer storage

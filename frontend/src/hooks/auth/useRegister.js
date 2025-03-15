@@ -12,7 +12,7 @@ const useRegister = () => {
   const { setAuthData } = useAuthStore();
 
   const register = async (formData) => {
-    const { firstName, lastName, email, password, passphrase } = formData;
+    const { firstName, lastName, email, password } = formData;
 
     if (!firstName || !email || !password) {
       toast.warn("All fields are required");
@@ -40,8 +40,7 @@ const useRegister = () => {
       const { data } = await api.post("/auth/register", {
         name,
         email,
-        password,
-        passphrase,
+        password
       });
 
       setAuthData(data.userData, data.token);
