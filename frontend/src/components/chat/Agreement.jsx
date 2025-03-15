@@ -21,8 +21,8 @@ const Agreement = ({ message, userId }) => {
   const { loading, respondToAgreement } = useRespondToAgreement();
   const { agreement } = message;
   const disableInput = userId === message.user_id;
-  const [upiId, setUpiId] = useState("");
-  const [pin, setUpiPin] = useState("");
+  const [upiId, setUpiId] = useState("rentit@okaxis");
+  const [pin, setUpiPin] = useState("777777777777");
 
   const handlePinInput = (e) => {
     const { value } = e.target;
@@ -54,6 +54,9 @@ const Agreement = ({ message, userId }) => {
       <div className="ml-4 space-y-2">
         <p className="text-muted-foreground text-sm">
           ₹500 upfront to finalize the contract, with ₹500 off your first month.
+        </p>
+        <p className="text-muted-foreground text-sm italic">
+          Note: Default UPI ID and PIN are pre-filled for testing purposes.
         </p>
       </div>
 
@@ -96,6 +99,7 @@ const Agreement = ({ message, userId }) => {
               disabled={disableInput}
               required
               fullWidth
+              helperText="Default UPI ID: rentit@okaxis"
             />
             <PasswordInput
               type="password"
@@ -103,6 +107,7 @@ const Agreement = ({ message, userId }) => {
               placeholder="Enter UPI PIN"
               value={pin}
               onChange={handlePinInput}
+              helperText="Default PIN: 777777777777"
             />
           </div>
         )}
