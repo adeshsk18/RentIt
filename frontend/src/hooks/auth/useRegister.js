@@ -4,35 +4,33 @@ import { toast } from "react-toastify";
 import { emailPattern, passwordPattern } from "../../constanst";
 import api from "../../services/api";
 import { getResponseMsg } from "../../services/utils";
-import useAuthStore from "../../stores/useAuthStore";
 
 const useRegister = () => {
   const [loading, setLoading] = useState(false);
-
-  const { setAuthData } = useAuthStore();
 
   const register = async (formData) => {
     const { firstName, lastName, email, password } = formData;
 
     if (!firstName || !email || !password) {
       toast.warn("All fields are required");
+      return false;
     }
 
     const name = `${firstName} ${lastName}`.trim();
 
     if (name.length < 5) {
       toast.warn("Combined name length should be at least 5 characters");
-      return;
+      return false;
     }
     if (!emailPattern.test(email)) {
       toast.warn("Invalid email format");
-      return;
+      return false;
     }
     if (!passwordPattern.test(password)) {
       toast.warn(
         "Password must be at least 8 characters, contain at least one number and one special character"
       );
-      return;
+      return false;
     }
 
     setLoading(true);
@@ -43,10 +41,11 @@ const useRegister = () => {
         password
       });
 
-      setAuthData(data.userData, data.token);
-      toast.success(data.message);
+      toast.success(data.message + " Please login with your credentials.");
+      return true;
     } catch (error) {
       toast.error(getResponseMsg(error));
+      return false;
     } finally {
       setLoading(false);
     }

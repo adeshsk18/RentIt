@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import AuthForm from "../components/AuthForm.jsx";
 import useRegister from "../hooks/auth/useRegister.js";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -15,7 +17,11 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await register(formData);
+    const success = await register(formData);
+    if (success) {
+      // Redirect to login page after successful registration
+      navigate("/login");
+    }
   };
 
   return (
