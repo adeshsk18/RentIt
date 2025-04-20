@@ -85,3 +85,49 @@ export const getAllPendingOwnerRequests = controllerWrapper(async (_, res) => {
 
   res.status(200).json(pendingRequests);
 });
+
+export const getAllUsers = controllerWrapper(async (_, res) => {
+  const users = await UserModel.find({}, '-password').sort({ type: 1, name: 1 });
+  res.status(200).json(users);
+});
+
+export const deleteUser = controllerWrapper(async (req, res) => {
+  const { userId } = req.params;
+  
+  const user = await UserModel.findById(userId);
+  
+  if (!user) {
+    throw new ValidationError("User not found");
+  }
+  
+  if (user.type === "admin") {
+    throw new ValidationError("Cannot delete admin users");
+  }
+
+  // Delete all properties listed by the user
+  await PropertyModel.deleteMany({ listedBy: userId });
+  
+  // Delete the user
+  await UserModel.deleteOne({ _id: userId });
+  
+  res.status(200).json({ message: "User and their properties deleted successfully" });
+});
+
+export const revertOwnerStatus = controllerWrapper(async (req, res) => {
+  const { userId } = req.params;
+  
+  const user = await UserModel.findById(userId);
+  
+  if (!user) {
+    throw new ValidationError("User not found");
+  }
+  
+  if (user.type !== "owner") {
+    throw new ValidationError("User is not an owner");
+  }
+  
+  user.type = "user";
+  await user.save();
+  
+  res.status(200).json({ message: "Owner status reverted successfully" });
+});

@@ -7,6 +7,10 @@ import { getStatusColor } from "../../constanst";
 import { getMediaPath } from "../../services/utils";
 
 const ListerInfoCard = ({ request, latestMessage, notSeen }) => {
+  if (!request?.listedBy || !request?.propertyId) {
+    return null;
+  }
+
   const { profilePicture, name, username } = request.listedBy;
   const { title, rent, status, location, propertyType } = request.propertyId;
 
@@ -18,14 +22,14 @@ const ListerInfoCard = ({ request, latestMessage, notSeen }) => {
           : "border-transparent"
       }`}
     >
-      <div className="flex gap-2 p-3">
+      <div className="flex gap-4 p-4">
         <div className="relative flex-shrink-0">
           <NavLink to={`/u/${username}`}>
             <Avatar
               src={getMediaPath(profilePicture)}
               alt={name}
               sx={{ width: 52, height: 52 }}
-              className="h-10 w-10 border-2 border-white shadow-sm"
+              className="border-2 border-white shadow-sm"
             />
             {notSeen && (
               <div className="absolute -right-1 -top-1">
@@ -40,65 +44,69 @@ const ListerInfoCard = ({ request, latestMessage, notSeen }) => {
             <div>
               <div className="flex items-center gap-2">
                 <h3
-                  className={`text-sm font-medium ${notSeen ? "text-blue-900" : "text-gray-900"}`}
+                  className={`text-base font-medium ${notSeen ? "text-blue-900" : "text-gray-900"}`}
                 >
                   {name}
                 </h3>
-                <span className="rounded-full bg-gray-200 px-1.5 py-0.5 text-xs uppercase text-gray-700">
+                <span className="rounded-full bg-gray-200 px-2 py-0.5 text-xs uppercase text-gray-700">
                   {propertyType}
                 </span>
               </div>
               <p
-                className={`text-xs ${notSeen ? "text-blue-800" : "text-gray-600"}`}
+                className={`text-sm ${notSeen ? "text-blue-800" : "text-gray-600"}`}
               >
-                @{name}
+                @{username}
               </p>
             </div>
             <div className="text-right">
               <span
-                className={`rounded-full px-2 py-0.5 text-xs ${getStatusColor(status)}`}
+                className={`inline-block rounded-full px-2.5 py-1 text-xs font-medium ${getStatusColor(status)}`}
               >
                 {status}
               </span>
               <p
-                className={`mt-1 text-xs ${notSeen ? "text-blue-700" : "text-gray-500"}`}
+                className={`mt-1.5 text-sm ${notSeen ? "text-blue-700" : "text-gray-500"}`}
               >
-                {new Date(request.updatedAt).toLocaleDateString()}
+                {new Date(request.updatedAt).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })}
               </p>
             </div>
           </div>
 
-          <div className="mt-1 flex items-center gap-3 text-xs">
+          <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
             <span
               className={`flex items-center truncate capitalize ${
                 notSeen ? "text-blue-700" : "text-gray-600"
               }`}
             >
-              {title}
+              <span className="truncate text-sm">{title}</span>
             </span>
 
             <span
-              className={`flex flex-shrink-0 items-center gap-0.5 ${
+              className={`flex items-center gap-1 ${
                 notSeen ? "text-blue-700" : "text-gray-600"
               }`}
             >
-              <IndianRupee className="h-3 w-3" />
-              <span>{rent}/mo</span>
+              <IndianRupee className="h-4 w-4" />
+              <span className="text-sm">{rent}/mo</span>
             </span>
 
             <span
-              className={`flex items-center gap-0.5 truncate ${
+              className={`flex items-center gap-1 ${
                 notSeen ? "text-blue-700" : "text-gray-600"
               }`}
             >
-              <MapPin className="h-3 w-3 flex-shrink-0" />
-              <span className="truncate">{location.address}</span>
+              <MapPin className="h-4 w-4 flex-shrink-0" />
+              <span className="truncate text-sm">{location.address}</span>
             </span>
           </div>
 
           {latestMessage && (
             <p
-              className={`mt-1 line-clamp-1 text-sm ${
+              className={`mt-2 line-clamp-1 text-sm ${
                 notSeen ? "font-medium text-blue-800" : "text-gray-600"
               }`}
             >

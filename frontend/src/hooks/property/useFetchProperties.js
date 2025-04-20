@@ -17,24 +17,25 @@ const useFetchProperties = () => {
       propertyType: filter.propertyType,
     }).toString();
 
-    setLoading(true);
-    try {
-      const response = await api.get(`/list/filter?${queryString}`);
-
-      if (response.data.message.startsWith("Ple")) {
-        toast.warn(response.data.message);
+    if (!loading) {
+      setLoading(true);
+      try {
+        const response = await api.get(`/list/filter?${queryString}`);
+        if (response.data.message?.startsWith("Ple")) {
+          toast.warn(response.data.message);
+        }
+        return response.data.properties || [];
+      } catch (error) {
+        toast.error(getResponseMsg(error));
+        return [];
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-      return response.data.properties;
-    } catch (error) {
-      toast.error(getResponseMsg(error));
-    } finally {
-      setLoading(false);
     }
-
     return [];
   };
 
   return { loading, fetchProperties };
 };
+
 export default useFetchProperties;
