@@ -7,7 +7,7 @@ import {
   Slider,
   Typography,
 } from "@mui/material";
-import { BedDouble, MapPin, Radius, SearchIcon } from "lucide-react";
+import { BedDouble, MapPin, SearchIcon } from "lucide-react";
 import React, { useState } from "react";
 
 import AmenitiesSelect from "../frags/AminitiesSelect";
@@ -18,7 +18,8 @@ const FilterWidget = ({ filters, setFilters, handleSearch }) => {
   const [isOpen, setOpenDialog] = useState(false);
 
   const handleChange = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFilters({ ...filters, [name]: value });
   };
 
   const handlRangeChange = (_, newValue, activeThumb) => {
@@ -34,6 +35,14 @@ const FilterWidget = ({ filters, setFilters, handleSearch }) => {
     }
 
     setFilters({ ...filters, priceRange: updatedVal });
+  };
+
+  const handleBedroomChange = (increment) => {
+    const newValue = Math.max(1, Math.min(7, filters.numberOfBedrooms + increment));
+    setFilters({
+      ...filters,
+      numberOfBedrooms: newValue
+    });
   };
 
   return (
@@ -56,23 +65,6 @@ const FilterWidget = ({ filters, setFilters, handleSearch }) => {
           </div>
 
           <div className="w-full px-4">
-            <div className="mb-2 flex items-center gap-2">
-              <Radius className="h-5 w-5" />
-              <Typography variant="body1">
-                {filters.maxDistance}km Radius
-              </Typography>
-            </div>
-            <Slider
-              value={filters.maxDistance}
-              min={5}
-              max={50}
-              step={1}
-              name="maxDistance"
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="w-full px-4">
             <Typography variant="body1" className="mb-2">
               ₹{filters.priceRange[0].toLocaleString()}/mo - ₹
               {filters.priceRange[1].toLocaleString()}/mo
@@ -80,7 +72,7 @@ const FilterWidget = ({ filters, setFilters, handleSearch }) => {
             <Slider
               value={filters.priceRange}
               min={1000}
-              max={170000}
+              max={500000}
               step={1000}
               onChange={handlRangeChange}
             />
@@ -92,12 +84,8 @@ const FilterWidget = ({ filters, setFilters, handleSearch }) => {
             <Button
               variant="text"
               size="sm"
-              onClick={() =>
-                setFilters({
-                  ...filters,
-                  numberOfBedrooms: Math.max(0, filters.numberOfBedrooms - 1),
-                })
-              }
+              onClick={() => handleBedroomChange(-1)}
+              disabled={filters.numberOfBedrooms <= 1}
             >
               -
             </Button>
@@ -105,12 +93,8 @@ const FilterWidget = ({ filters, setFilters, handleSearch }) => {
             <Button
               variant="text"
               size="sm"
-              onClick={() =>
-                setFilters({
-                  ...filters,
-                  numberOfBedrooms: Math.min(7, filters.numberOfBedrooms + 1),
-                })
-              }
+              onClick={() => handleBedroomChange(1)}
+              disabled={filters.numberOfBedrooms >= 7}
             >
               +
             </Button>
@@ -174,7 +158,7 @@ const FilterWidget = ({ filters, setFilters, handleSearch }) => {
             <Button
               className="gap-2 px-6 py-2"
               variant="contained"
-              onClick={handleSearch}
+              onClick={() => handleSearch(filters)}
             >
               <SearchIcon className="h-5 w-5" />
               Search Properties

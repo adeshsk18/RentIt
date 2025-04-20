@@ -119,9 +119,9 @@ export const validateDescription = (description) => {
 
 export const validateRent = (rent) => {
   const numericRent = Number(rent);
-  if (isNaN(numericRent) || numericRent < 1000 || numericRent > 170000) {
+  if (isNaN(numericRent) || numericRent < 1000) {
     throw new ValidationError(
-      "Rent should be a number between 1000 and 170000."
+      "Rent should be a number greater than or equal to 1000."
     );
   }
   return numericRent;

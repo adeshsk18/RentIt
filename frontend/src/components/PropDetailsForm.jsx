@@ -127,7 +127,6 @@ const DetailsInput = ({ formData, setFormData, disableDocIn }) => {
               inputProps={{
                 min: 1000,
                 step: 1000,
-                max: 170000,
               }}
               value={formData.rent}
               onChange={handleInputChange}

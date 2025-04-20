@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { ChevronDown, Home as HomeIcon, MapPin, Search } from "lucide-react";
+import runAdvancedSearchTests from "../tests/runAdvancedSearchTests";
 
 import PropertiesGrid from "../components/PropertiesGrid";
 import Loading from "../components/blocks/loading";
@@ -63,7 +64,7 @@ const QuickSearch = ({ onSearch }) => {
     onSearch({
       address: location,
       maxDistance: 5,
-      priceRange: [1000, 40000],
+      priceRange: [1000, 200000],
       numberOfBedrooms: 1,
       propertyType: propertyType,
       amenities: [],
@@ -109,7 +110,7 @@ const Home = () => {
   const [filters, setFilters] = useState({
     address: "",
     maxDistance: 5,
-    priceRange: [1000, 40000],
+    priceRange: [1000, 200000],
     numberOfBedrooms: 1,
     propertyType: "",
     amenities: [],
@@ -138,6 +139,13 @@ const Home = () => {
       handleSearch(filters, false);
     }
   }, [isInitialLoad, filters, handleSearch]);
+
+  useEffect(() => {
+    // Run tests in development mode
+    if (process.env.NODE_ENV === 'development') {
+      runAdvancedSearchTests();
+    }
+  }, []);
 
   const showLoading = loading && !isInitialLoad;
 
