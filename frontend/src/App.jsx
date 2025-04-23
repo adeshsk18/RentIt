@@ -6,6 +6,7 @@ import {
   Route,
   BrowserRouter as Router,
   Routes,
+  useLocation,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,10 +28,11 @@ import PublicUserProfile from "./pages/UserPage";
 import useAuthStore from "./stores/useAuthStore";
 import useSocketStore from "./stores/useSocketStore";
 
-function App() {
+const AppContent = () => {
   const { initializeSocket, closeSocket } = useSocketStore();
   const { loading, fetchRequests } = useFetchRequests();
   const { userData } = useAuthStore();
+  const location = useLocation();
 
   useEffect(() => {
     const initSocketAndFetchRequests = async () => {
@@ -49,67 +51,66 @@ function App() {
     };
   }, [userData]);
 
-  if (loading) <Loading />;
+  if (loading) return <Loading />;
+
+  // Don't show navbar on login and register pages
+  const hideNavbar = ['/login', '/register'].includes(location.pathname);
 
   return (
     <>
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route
-            path="/login"
-            element={userData ? <Navigate to="/" /> : <Login />}
-          />
-          <Route
-            path="/register"
-            element={userData ? <Navigate to="/" /> : <Register />}
-          />
-          <Route path="/profile" element={<MyProfile />} />
-          <Route path="/requests" element={<MyRequests />} />
-          <Route path="/u/:userId" element={<PublicUserProfile />} />
-          <Route path="/listing/:propertyId" element={<Listing />} />
-
-          <Route
-            path="/properties"
-            element={
-              userData?.type !== "user" ? <MyProperties /> : <Navigate to="/" />
-            }
-          />
-          <Route
-            path="/property/add"
-            element={
-              userData?.type !== "user" ? <AddProperty /> : <Navigate to="/" />
-            }
-          />
-          <Route
-            path="/property/:propertyId"
-            element={
-              userData?.type !== "user" ? <UDProperty /> : <Navigate to="/" />
-            }
-          />
-
-          <Route
-            path="/admin"
-            element={
-              userData?.type === "admin" ? <AdminPanel /> : <Navigate to="/" />
-            }
-          />
-        </Routes>
-        <ToastContainer
-          position="bottom-left"
-          autoClose={3000}
-          hideProgressBar
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss={false}
-          draggable={false}
-          pauseOnHover
-          theme="colored"
-          limit={3}
+      {!hideNavbar && <Navbar />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/login"
+          element={userData ? <Navigate to="/" /> : <Login />}
         />
+        <Route
+          path="/register"
+          element={userData ? <Navigate to="/" /> : <Register />}
+        />
+        <Route path="/profile" element={<MyProfile />} />
+        <Route path="/requests" element={<MyRequests />} />
+        <Route path="/u/:userId" element={<PublicUserProfile />} />
+        <Route path="/listing/:propertyId" element={<Listing />} />
+
+        <Route
+          path="/properties"
+          element={
+            userData?.type !== "user" ? <MyProperties /> : <Navigate to="/" />
+          }
+        />
+        <Route
+          path="/property/add"
+          element={
+            userData?.type !== "user" ? <AddProperty /> : <Navigate to="/" />
+          }
+        />
+        <Route
+          path="/property/:propertyId"
+          element={
+            userData?.type !== "user" ? <UDProperty /> : <Navigate to="/" />
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            userData?.type === "admin" ? <AdminPanel /> : <Navigate to="/" />
+          }
+        />
+      </Routes>
+    </>
+  );
+};
+
+function App() {
+  return (
+    <>
+      <Router>
+        <AppContent />
       </Router>
+      <ToastContainer />
     </>
   );
 }

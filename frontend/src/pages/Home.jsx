@@ -4,7 +4,7 @@ import { ChevronDown, Home as HomeIcon, MapPin, Search } from "lucide-react";
 import PropertiesGrid from "../components/PropertiesGrid";
 import Loading from "../components/blocks/loading";
 import NoListings from "../components/blocks/noListings";
-import FilterWidget from "../components/home/FilterWidget";
+import AdvancedFilters from "../components/home/AdvancedFilters";
 import { availablePropertyTypes } from "../constanst";
 import useFetchProperties from "../hooks/property/useFetchProperties";
 
@@ -62,10 +62,9 @@ const QuickSearch = ({ onSearch }) => {
     e.preventDefault();
     onSearch({
       address: location,
-      maxDistance: 5,
+      propertyType: propertyType,
       priceRange: [1000, 40000],
       numberOfBedrooms: 1,
-      propertyType: propertyType,
       amenities: [],
     });
   };
@@ -108,10 +107,9 @@ const Home = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [filters, setFilters] = useState({
     address: "",
-    maxDistance: 5,
+    propertyType: "",
     priceRange: [1000, 40000],
     numberOfBedrooms: 1,
-    propertyType: "",
     amenities: [],
   });
 
@@ -120,7 +118,12 @@ const Home = () => {
   const scrollToProperties = () => {
     const propertiesSection = document.getElementById('properties-section');
     if (propertiesSection) {
-      propertiesSection.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        propertiesSection.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 100);
     }
   };
 
@@ -172,19 +175,14 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Advanced Filters and Results Section */}
+      {/* Results Section */}
       <div id="properties-section" className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 gap-6">
-          <div className="md:w-full">
-            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-              <h2 className="mb-4 text-lg font-semibold text-gray-900">Advanced Filters</h2>
-              <FilterWidget
-                filters={filters}
-                setFilters={setFilters}
-                handleSearch={(newFilters) => handleSearch(newFilters, true)}
-              />
-            </div>
-          </div>
+          <AdvancedFilters
+            filters={filters}
+            setFilters={setFilters}
+            handleSearch={handleSearch}
+          />
 
           {showLoading ? (
             <div className="flex justify-center">

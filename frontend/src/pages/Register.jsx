@@ -1,25 +1,24 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import AuthForm from "../components/AuthForm.jsx";
-import useRegister from "../hooks/auth/useRegister.js";
+import { toast } from "react-toastify";
+import AuthForm from "../components/AuthForm";
+import useRegister from "../hooks/auth/useRegister";
 
 const Register = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     password: "",
+    contactNumber: "",
   });
-
   const { loading, register } = useRegister();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const success = await register(formData);
     if (success) {
-      // Redirect to login page after successful registration
+      toast.success("Registration successful!");
       navigate("/login");
     }
   };
@@ -30,8 +29,8 @@ const Register = () => {
       setFormData={setFormData}
       handleSubmit={handleSubmit}
       name="Register"
-      altMsg="If you have already registered,"
-      altPath={"login"}
+      altMsg="If you already have an account,"
+      altPath="login"
       loading={loading}
     />
   );

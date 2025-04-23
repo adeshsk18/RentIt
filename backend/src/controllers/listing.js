@@ -10,13 +10,14 @@ import { UserModel } from "../models/user.js";
 export const getFilteredProperties = controllerWrapper(async (req, res) => {
   const {
     address,
-    maxDistance = 5,
+    propertyType,
     priceRange,
     numberOfBedrooms,
     amenities,
-    propertyType,
   } = req.query;
   const { userId } = req.body;
+
+  console.log("Search query received:", { address, propertyType, priceRange, numberOfBedrooms, amenities });
 
   const query = {
     status: "available",
@@ -25,19 +26,10 @@ export const getFilteredProperties = controllerWrapper(async (req, res) => {
   let message = "Properties retrieved successfully.";
 
   if (address) {
-    const [cords, status] = await getGeocordinates(address);
-    if (!status) {
-      message = "Please Enter a valid location.";
-    }
-
-    const latitude = parseFloat(cords.lat);
-    const longitude = parseFloat(cords.lon);
-
-    query["location.coordinates"] = {
-      $geoWithin: {
-        $centerSphere: [[longitude, latitude], maxDistance / 6378.1],
-      },
-    };
+    // Use text search on the address field
+    const searchRegex = new RegExp(address, 'i');
+    console.log("Searching with regex:", searchRegex);
+    query.address = { $regex: searchRegex };
   }
 
   if (propertyType) {
@@ -45,18 +37,28 @@ export const getFilteredProperties = controllerWrapper(async (req, res) => {
     query.propertyType = propt;
   }
 
+  // Price range filter
   if (priceRange) {
     const [minPrice, maxPrice] = priceRange.split(",").map(Number);
-    query.rent = { $gte: minPrice, $lte: maxPrice };
+    if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+      query.rent = { $gte: minPrice, $lte: maxPrice };
+    }
   }
 
+  // Bedrooms filter - exact match
   if (numberOfBedrooms) {
-    query.numberOfBedrooms = { $gte: Number(numberOfBedrooms) };
+    const numBedrooms = Number(numberOfBedrooms);
+    if (!isNaN(numBedrooms)) {
+      query.numberOfBedrooms = numBedrooms; // Exact match
+    }
   }
 
+  // Amenities filter
   if (amenities) {
-    const amenitiesList = amenities.toLowerCase().split(",");
-    query.amenities = { $all: amenitiesList };
+    const amenitiesList = amenities.toLowerCase().split(",").filter(a => a.trim() !== "");
+    if (amenitiesList.length > 0) {
+      query.amenities = { $all: amenitiesList };
+    }
   }
 
   if (userId) {
@@ -65,9 +67,13 @@ export const getFilteredProperties = controllerWrapper(async (req, res) => {
     query._id = { $nin: requestedPropertyIds };
   }
 
+  console.log("Final query being executed:", JSON.stringify(query, null, 2));
+
   const properties = await PropertyModel.find(query).select(
     "-description -listedBy -legalDocumentId -status -isApproved"
   );
+
+  console.log(`Found ${properties.length} properties matching the query`);
 
   res.status(200).json({
     message,

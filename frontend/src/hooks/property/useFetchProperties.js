@@ -9,12 +9,11 @@ const useFetchProperties = () => {
 
   const fetchProperties = async (filter) => {
     const queryString = new URLSearchParams({
-      address: filter.address,
-      maxDistance: filter.maxDistance,
-      priceRange: filter.priceRange.join(","),
-      numberOfBedrooms: filter.numberOfBedrooms,
-      amenities: filter.amenities.join(","),
-      propertyType: filter.propertyType,
+      address: filter.address || "",
+      propertyType: filter.propertyType || "",
+      priceRange: Array.isArray(filter.priceRange) ? filter.priceRange.join(",") : "1000,40000",
+      numberOfBedrooms: filter.numberOfBedrooms || 1,
+      amenities: Array.isArray(filter.amenities) ? filter.amenities.join(",") : "",
     }).toString();
 
     if (!loading) {
