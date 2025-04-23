@@ -6,54 +6,9 @@ import PropertiesGrid from "../components/PropertiesGrid";
 import Loading from "../components/blocks/loading";
 import NoListings from "../components/blocks/noListings";
 import AdvancedFilters from "../components/home/AdvancedFilters";
+import PropertyTypeSelect from "../components/frags/ProptypeSelect";
 import { availablePropertyTypes } from "../constanst";
 import useFetchProperties from "../hooks/property/useFetchProperties";
-
-const CustomDropdown = ({ value, onChange, error }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="relative">
-      <HomeIcon className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 pointer-events-none" />
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className={`flex w-full items-center justify-between rounded-lg border ${error ? 'border-red-300' : 'border-gray-300'} bg-white py-3 pl-10 pr-4 text-sm text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
-      >
-        <span>{value ? value.charAt(0).toUpperCase() + value.slice(1) : "Select property type"}</span>
-        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
-      </button>
-      
-      {isOpen && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 overflow-hidden rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
-          <div 
-            className="cursor-pointer px-4 py-2 text-sm text-gray-500 hover:bg-gray-50"
-            onClick={() => {
-              onChange("");
-              setIsOpen(false);
-            }}
-          >
-            Select property type
-          </div>
-          {availablePropertyTypes.map((type) => (
-            <div
-              key={type}
-              className={`cursor-pointer px-4 py-2 text-sm capitalize ${
-                value === type ? "bg-blue-50 text-blue-600" : "text-gray-700 hover:bg-gray-50"
-              }`}
-              onClick={() => {
-                onChange(type);
-                setIsOpen(false);
-              }}
-            >
-              {type}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
 
 const QuickSearch = ({ onSearch }) => {
   const [location, setLocation] = useState("");
@@ -101,13 +56,14 @@ const QuickSearch = ({ onSearch }) => {
           </div>
         </div>
         <div className="flex-1">
-          <CustomDropdown 
-            value={propertyType}
-            onChange={(value) => {
-              setPropertyType(value);
-              setError(""); // Clear error when user selects
+          <PropertyTypeSelect
+            formData={{ propertyType }}
+            handleChange={(e) => {
+              setPropertyType(e.target.value);
+              setError("");
             }}
-            error={error && !propertyType}
+            useAll={true}
+            required={false}
           />
         </div>
         <button
