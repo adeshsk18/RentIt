@@ -7,14 +7,33 @@ import {
   Typography,
 } from "@mui/material";
 import { BedDouble, IndianRupee, X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 import AmenitiesSelect from "../frags/AminitiesSelect";
 import PropertyTypeSelect from "../frags/ProptypeSelect";
 
+// Default filter values
+const defaultFilters = {
+  priceRange: [1000, 40000],
+  numberOfBedrooms: 1,
+  propertyType: "",
+  amenities: [],
+};
+
 const AdvancedFilters = ({ filters, setFilters, handleSearch }) => {
   const [isAmenitiesOpen, setAmenitiesOpen] = useState(false);
   const minPriceDiff = 2000;
+
+  // Check if any filter has been modified from default values
+  const hasModifiedFilters = useMemo(() => {
+    return (
+      filters.propertyType !== defaultFilters.propertyType ||
+      filters.numberOfBedrooms !== defaultFilters.numberOfBedrooms ||
+      filters.priceRange[0] !== defaultFilters.priceRange[0] ||
+      filters.priceRange[1] !== defaultFilters.priceRange[1] ||
+      filters.amenities.length > 0
+    );
+  }, [filters]);
 
   const handlePriceRangeChange = (_, newValue) => {
     if (!Array.isArray(newValue)) return;
@@ -34,10 +53,7 @@ const AdvancedFilters = ({ filters, setFilters, handleSearch }) => {
   const clearFilters = () => {
     setFilters({
       ...filters,
-      priceRange: [1000, 40000],
-      numberOfBedrooms: 1,
-      propertyType: "",
-      amenities: [],
+      ...defaultFilters
     });
   };
 
@@ -45,14 +61,16 @@ const AdvancedFilters = ({ filters, setFilters, handleSearch }) => {
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">Advanced Search</h2>
-        <Button
-          variant="text"
-          startIcon={<X className="h-4 w-4" />}
-          onClick={clearFilters}
-          className="text-gray-500 hover:text-gray-700"
-        >
-          Clear Filters
-        </Button>
+        {hasModifiedFilters && (
+          <Button
+            variant="text"
+            startIcon={<X className="h-4 w-4" />}
+            onClick={clearFilters}
+            className="text-gray-500 hover:text-gray-700 transition-opacity"
+          >
+            Clear Filters
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">

@@ -7,19 +7,34 @@ import { getResponseMsg } from "../../services/utils";
 const useFetchProperties = () => {
   const [loading, setLoading] = useState(false);
 
-  const fetchProperties = async (filter) => {
-    const queryString = new URLSearchParams({
-      address: filter.address || "",
-      propertyType: filter.propertyType || "",
-      priceRange: Array.isArray(filter.priceRange) ? filter.priceRange.join(",") : "1000,40000",
-      numberOfBedrooms: filter.numberOfBedrooms || 1,
-      amenities: Array.isArray(filter.amenities) ? filter.amenities.join(",") : "",
-    }).toString();
+  const fetchProperties = async (filter = {}) => {
+    const params = new URLSearchParams();
+    
+    // Only add filters that are explicitly set
+    if (filter.address?.trim()) {
+      params.append('address', filter.address.trim());
+    }
+    
+    if (filter.propertyType?.trim()) {
+      params.append('propertyType', filter.propertyType.trim());
+    }
+    
+    if (Array.isArray(filter.priceRange) && filter.priceRange.length === 2) {
+      params.append('priceRange', filter.priceRange.join(','));
+    }
+    
+    if (filter.numberOfBedrooms !== undefined && filter.numberOfBedrooms !== null) {
+      params.append('numberOfBedrooms', filter.numberOfBedrooms);
+    }
+    
+    if (Array.isArray(filter.amenities) && filter.amenities.length > 0) {
+      params.append('amenities', filter.amenities.join(','));
+    }
 
     if (!loading) {
       setLoading(true);
       try {
-        const response = await api.get(`/list/filter?${queryString}`);
+        const response = await api.get(`/list/filter?${params}`);
         if (response.data.message?.startsWith("Ple")) {
           toast.warn(response.data.message);
         }
