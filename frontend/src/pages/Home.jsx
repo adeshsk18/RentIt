@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { ChevronDown, Home as HomeIcon, MapPin, Search } from "lucide-react";
+import { ChevronDown, Home as HomeIcon, MapPin, Search, Compass } from "lucide-react";
+import { toast } from "react-toastify";
 
 import PropertiesGrid from "../components/PropertiesGrid";
 import Loading from "../components/blocks/loading";
@@ -8,7 +9,7 @@ import AdvancedFilters from "../components/home/AdvancedFilters";
 import { availablePropertyTypes } from "../constanst";
 import useFetchProperties from "../hooks/property/useFetchProperties";
 
-const CustomDropdown = ({ value, onChange }) => {
+const CustomDropdown = ({ value, onChange, error }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -17,7 +18,7 @@ const CustomDropdown = ({ value, onChange }) => {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between rounded-lg border border-gray-300 bg-white py-3 pl-10 pr-4 text-sm text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className={`flex w-full items-center justify-between rounded-lg border ${error ? 'border-red-300' : 'border-gray-300'} bg-white py-3 pl-10 pr-4 text-sm text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
       >
         <span>{value ? value.charAt(0).toUpperCase() + value.slice(1) : "Select property type"}</span>
         <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
@@ -57,11 +58,23 @@ const CustomDropdown = ({ value, onChange }) => {
 const QuickSearch = ({ onSearch }) => {
   const [location, setLocation] = useState("");
   const [propertyType, setPropertyType] = useState("");
+  const [error, setError] = useState("");
 
   const handleQuickSearch = (e) => {
     e.preventDefault();
+    
+    // Clear any previous error
+    setError("");
+
+    // Check if at least one field is filled
+    if (!location.trim() && !propertyType) {
+      setError("Please enter a location or select a property type");
+      toast.warning("Please enter a location or select a property type");
+      return;
+    }
+
     onSearch({
-      address: location,
+      address: location.trim(),
       propertyType: propertyType,
       priceRange: [1000, 40000],
       numberOfBedrooms: 1,
@@ -79,15 +92,22 @@ const QuickSearch = ({ onSearch }) => {
               type="text"
               placeholder="Enter location..."
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white py-3 pl-10 pr-4 text-sm placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              onChange={(e) => {
+                setLocation(e.target.value);
+                setError(""); // Clear error when user types
+              }}
+              className={`w-full rounded-lg border ${error && !location.trim() ? 'border-red-300' : 'border-gray-300'} bg-white py-3 pl-10 pr-4 text-sm placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
             />
           </div>
         </div>
         <div className="flex-1">
           <CustomDropdown 
             value={propertyType}
-            onChange={setPropertyType}
+            onChange={(value) => {
+              setPropertyType(value);
+              setError(""); // Clear error when user selects
+            }}
+            error={error && !propertyType}
           />
         </div>
         <button
@@ -98,13 +118,17 @@ const QuickSearch = ({ onSearch }) => {
           Search
         </button>
       </div>
+      {error && (
+        <div className="mt-2 text-center text-sm text-red-500">
+          {error}
+        </div>
+      )}
     </form>
   );
 };
 
 const Home = () => {
   const [properties, setProperties] = useState([]);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [filters, setFilters] = useState({
     address: "",
     propertyType: "",
@@ -130,19 +154,17 @@ const Home = () => {
   const handleSearch = useCallback(async (searchFilters = filters, shouldScroll = true) => {
     const results = await fetchProperties(searchFilters);
     setProperties(results || []);
-    setIsInitialLoad(false);
     if (shouldScroll) {
       scrollToProperties();
     }
   }, [fetchProperties]);
 
+  // Add initial load to fetch all properties
   useEffect(() => {
-    if (isInitialLoad) {
-      handleSearch(filters, false);
-    }
-  }, [isInitialLoad, filters, handleSearch]);
+    handleSearch({}, false);
+  }, []);
 
-  const showLoading = loading && !isInitialLoad;
+  const showLoading = loading;
 
   return (
     <div>
@@ -171,6 +193,20 @@ const Home = () => {
               setFilters(newFilters);
               handleSearch(newFilters, true);
             }} />
+
+            <div className="mt-8 flex flex-col items-center space-y-2">
+              <p className="text-white/80 text-sm">- or -</p>
+              <button
+                onClick={() => {
+                  handleSearch({}, true);
+                  scrollToProperties();
+                }}
+                className="group inline-flex items-center justify-center gap-2 rounded-lg border-2 border-white bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent"
+              >
+                <Compass className="h-5 w-5 transition-transform group-hover:rotate-45" />
+                Explore All Properties
+              </button>
+            </div>
           </div>
         </div>
       </div>
