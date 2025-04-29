@@ -10,7 +10,6 @@ MERN stack house rental app with realtime chat & request updates using socket.io
 
 ![er](ss/er_diagram.svg)
 
-for the project documentation/report check [project_report.pdf](./project_report.pdf)
 
 ## Installation
 
