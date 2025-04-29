@@ -1,11 +1,7 @@
-# RentIt  <!--[Live Link](https://rentit-jei9.onrender.com/) | [Demo Video](https://youtu.be/SlHoExFpXx8) -->
+# RentIt  
 
-MERN stack house rental app with realtime chat & request updates using socket.io and being hosted on [Render](https://render.com/). 
+MERN stack house rental app with realtime chat & request updates using socket.io.
 
-> [**Click here to visit the live site**](https://rentit-jei9.onrender.com/)
-
-
-> [**Click here to watch the demo video**](https://youtu.be/SlHoExFpXx8)
 
 ## Screenshots
 
