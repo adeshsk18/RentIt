@@ -2,6 +2,7 @@ import ValidationError from "../lib/errors.js";
 import { controllerWrapper } from "../lib/utils.js";
 import { UserModel } from "../models/user.js";
 import { createNewUser } from "./user.js";
+import jwt from "jsonwebtoken";
 
 export const registerUser = controllerWrapper(async (req, res) => {
   const { name, email, password } = req.body;
@@ -61,4 +62,89 @@ export const logoutUser = controllerWrapper(async (_, res) => {
   });
 
   res.status(200).json({ message: "Logged out successfully." });
+});
+
+export const forgotPassword = controllerWrapper(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await UserModel.findOne({ email });
+
+  if (!user) {
+    throw new ValidationError("No user found with this email address");
+  }
+
+  // Generate reset token that expires in 15 minutes
+  const resetToken = jwt.sign(
+    { id: user._id },
+    process.env.JWT_SECRET,
+    { expiresIn: "15m" }
+  );
+
+  // Generate reset link
+  const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+  res.status(200).json({
+    message: "Password reset link generated successfully",
+    resetLink,
+  });
+});
+
+export const verifyEmail = controllerWrapper(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await UserModel.findOne({ email });
+
+  if (!user) {
+    throw new ValidationError("No user found with this email address");
+  }
+
+  res.status(200).json({
+    message: "Email verified successfully",
+  });
+});
+
+export const resetPassword = controllerWrapper(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await UserModel.findOne({ email });
+
+  if (!user) {
+    throw new ValidationError("User not found");
+  }
+
+  // Update password
+  user.password = password;
+  await user.save();
+
+  res.status(200).json({
+    message: "Password reset successful",
+  });
+});
+
+export const verifyResetToken = controllerWrapper(async (req, res) => {
+  const { token } = req.params;
+
+  try {
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Find user by ID
+    const user = await UserModel.findById(decoded.id);
+
+    if (!user) {
+      throw new ValidationError("User not found");
+    }
+
+    res.status(200).json({
+      message: "Token is valid",
+    });
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      throw new ValidationError("Password reset link has expired");
+    }
+    if (error.name === "JsonWebTokenError") {
+      throw new ValidationError("Invalid reset link");
+    }
+    throw error;
+  }
 });

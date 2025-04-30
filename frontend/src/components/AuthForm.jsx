@@ -100,6 +100,16 @@ const AuthForm = ({
                   {showPassword ? <BsEyeSlashFill size={16} /> : <BsEyeFill size={16} />}
                 </button>
               </div>
+              {name === "Login" && (
+                <div className="text-right mt-1">
+                  <Link
+                    to="/forgot-password"
+                    className="text-xs text-blue-600 hover:text-blue-700"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
+              )}
             </div>
 
             {name === "Register" && (

@@ -16,6 +16,7 @@ import Navbar from "./components/navbar";
 import useFetchRequests from "./hooks/chat/useFetchRequests";
 import AddProperty from "./pages/AddProperty";
 import AdminPanel from "./pages/AdminPanel";
+import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import Listing from "./pages/Listing";
 import Login from "./pages/Login";
@@ -23,6 +24,7 @@ import MyProfile from "./pages/MyProfile";
 import MyProperties from "./pages/MyProperties";
 import MyRequests from "./pages/MyRequests";
 import Register from "./pages/Register";
+import ResetPassword from "./pages/ResetPassword";
 import UDProperty from "./pages/UDProperty";
 import PublicUserProfile from "./pages/UserPage";
 import useAuthStore from "./stores/useAuthStore";
@@ -54,7 +56,7 @@ const AppContent = () => {
   if (loading) return <Loading />;
 
   // Don't show navbar on login and register pages
-  const hideNavbar = ['/login', '/register'].includes(location.pathname);
+  const hideNavbar = ['/login', '/register', '/forgot-password', '/reset-password'].includes(location.pathname);
 
   return (
     <>
@@ -68,6 +70,14 @@ const AppContent = () => {
         <Route
           path="/register"
           element={userData ? <Navigate to="/" /> : <Register />}
+        />
+        <Route
+          path="/forgot-password"
+          element={userData ? <Navigate to="/" /> : <ForgotPassword />}
+        />
+        <Route
+          path="/reset-password/:token"
+          element={userData ? <Navigate to="/" /> : <ResetPassword />}
         />
         <Route path="/profile" element={<MyProfile />} />
         <Route path="/requests" element={<MyRequests />} />
