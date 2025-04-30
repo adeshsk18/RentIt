@@ -9,17 +9,15 @@ const useRegister = () => {
   const [loading, setLoading] = useState(false);
 
   const register = async (formData) => {
-    const { firstName, lastName, email, password } = formData;
+    const { name, email, password, contactNumber } = formData;
 
-    if (!firstName || !email || !password) {
+    if (!name || !email || !password || !contactNumber) {
       toast.warn("All fields are required");
       return false;
     }
 
-    const name = `${firstName} ${lastName}`.trim();
-
     if (name.length < 5) {
-      toast.warn("Combined name length should be at least 5 characters");
+      toast.warn("Name should be at least 5 characters");
       return false;
     }
     if (!emailPattern.test(email)) {
@@ -38,7 +36,8 @@ const useRegister = () => {
       const { data } = await api.post("/auth/register", {
         name,
         email,
-        password
+        password,
+        contactNumber
       });
 
       toast.success(data.message + " Please login with your credentials.");

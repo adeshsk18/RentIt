@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import { LogOut } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 import ProfileBox from "../components/ProfileBox";
@@ -9,10 +10,12 @@ import EditProfile from "../components/profile/EditProfile";
 import OwnerRequestButton from "../components/profile/OwnerRequestButton";
 import useGetMyInfo from "../hooks/user/useGetMyInfo";
 import useAuthStore from "../stores/useAuthStore";
+import useLogout from "../hooks/auth/useLogout";
 
 const MyProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { userData } = useAuthStore();
+  const { loading: logoutLoading, logout } = useLogout();
 
   const [user, setUser] = useState(null);
 
@@ -53,8 +56,17 @@ const MyProfile = () => {
           Edit Profile
         </Button>
         <ChangePassword />
-
         {userData.type === "user" && <OwnerRequestButton />}
+        <Button
+          onClick={logout}
+          disabled={logoutLoading}
+          variant="contained"
+          color="error"
+          className="flex items-center gap-2"
+        >
+          <LogOut size={20} />
+          {logoutLoading ? "Logging out..." : "Logout"}
+        </Button>
       </div>
     </div>
   );

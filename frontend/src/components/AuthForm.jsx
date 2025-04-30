@@ -23,6 +23,15 @@ const AuthForm = ({
   return (
     <div className="h-screen overflow-hidden bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center">
       <div className="w-full max-w-md mx-auto px-4">
+        {/* Back to Home Button */}
+        <Link
+          to="/"
+          className="mb-4 flex items-center gap-2 text-white hover:text-gray-200 transition-colors duration-200"
+        >
+          <FaHome className="text-lg" />
+          <span>Back to Home</span>
+        </Link>
+
         {/* Form Section with Brand */}
         <div className="bg-white rounded-lg shadow-xl p-5 mb-8">
           {/* Brand Section */}

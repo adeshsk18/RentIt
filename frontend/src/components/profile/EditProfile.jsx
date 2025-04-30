@@ -6,7 +6,7 @@ import {
   Input,
   InputLabel,
 } from "@mui/material";
-import { Check, Pencil, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import React, { useState } from "react";
 import PhoneInput from "react-phone-input-2";
 
@@ -71,13 +71,6 @@ const EditProfile = ({ userData, onUpdate, setIsEditing }) => {
                 alt={userData.username}
                 sx={{ width: 128, height: 128 }}
               />
-
-              <label
-                htmlFor="profile-upload"
-                className="absolute -bottom-1 -right-1 cursor-pointer rounded-full bg-white p-2 shadow-md transition-colors hover:bg-gray-50"
-              >
-                <Pencil className="h-4 w-4 text-gray-600" />
-              </label>
               <input
                 id="profile-upload"
                 type="file"

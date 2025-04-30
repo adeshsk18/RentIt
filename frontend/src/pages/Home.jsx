@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { ChevronDown, Home as HomeIcon, MapPin, Search, Compass } from "lucide-react";
+import { ChevronDown, Home as HomeIcon, MapPin, Search, Compass, ArrowUp } from "lucide-react";
 import { toast } from "react-toastify";
 
 import PropertiesGrid from "../components/PropertiesGrid";
@@ -85,6 +85,7 @@ const QuickSearch = ({ onSearch }) => {
 
 const Home = () => {
   const [properties, setProperties] = useState([]);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const [filters, setFilters] = useState({
     address: "",
     propertyType: "",
@@ -94,6 +95,26 @@ const Home = () => {
   });
 
   const { loading, fetchProperties } = useFetchProperties();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
 
   const scrollToProperties = () => {
     const propertiesSection = document.getElementById('properties-section');
@@ -187,6 +208,17 @@ const Home = () => {
           )}
         </div>
       </div>
+
+      {/* Back to Top Button */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition-all duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          aria-label="Back to top"
+        >
+          <ArrowUp className="h-6 w-6" />
+        </button>
+      )}
     </div>
   );
 };

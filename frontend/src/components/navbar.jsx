@@ -11,42 +11,12 @@ import {
   User,
   UserPlus,
 } from "lucide-react";
-import { LogOut } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import useLogout from "../hooks/auth/useLogout";
 import useAuthStore from "../stores/useAuthStore";
 import useRequestStore from "../stores/useRequestStore";
 
-const LogoutButton = () => {
-  const { loading, logout } = useLogout();
-
-  return (
-    <Button
-      onClick={logout}
-      disabled={loading}
-      sx={{
-        backgroundColor: "#EF3f1f",
-        "&:hover": {
-          backgroundColor: "#DC2626",
-        },
-        padding: "8px 16px",
-        textTransform: "none",
-      }}
-      className={`flex items-center gap-2 ${loading ? "cursor-not-allowed" : "cursor-pointer"} `}
-    >
-      {loading ? (
-        <CircularProgress size={20} className="text-white" />
-      ) : (
-        <LogOut size={20} className="text-white" />
-      )}
-      <span className="font-medium text-white">
-        {loading ? "Logging out..." : "Logout"}
-      </span>
-    </Button>
-  );
-};
 const NavLink = ({ to, children, icon: Icon }) => (
   <Link
     to={to}
@@ -209,16 +179,6 @@ const Navbar = () => {
           </div>
         </MobileMenuItem>
       );
-
-      items.push(
-        <MenuItem
-          key="logout"
-          onClick={handleMenuClose}
-          className="w-full px-4"
-        >
-          <LogoutButton />
-        </MenuItem>
-      );
     } else {
       items.push(
         <MobileMenuItem key="login" to="/login" onClick={handleMenuClose}>
@@ -240,7 +200,7 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="sticky" className="bg-blue-500 shadow-lg">
+    <AppBar position="sticky" className="bg-blue-600">
       <Toolbar className="container mx-auto px-4">
         <div className="flex w-full items-center justify-between">
           <Link
@@ -279,8 +239,6 @@ const Navbar = () => {
                 <NavLinkWithBadge to="/profile" icon={User}>
                   Profile
                 </NavLinkWithBadge>
-
-                <LogoutButton />
               </>
             ) : (
               <>
