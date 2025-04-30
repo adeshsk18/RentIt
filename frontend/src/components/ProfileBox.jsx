@@ -82,7 +82,7 @@ const ProfileBox = ({ userData }) => {
                 <div>
                   <InfoItem
                     icon={Shield}
-                    label="Legal Verification ID"
+                    label="Aadhar Number"
                     value={legalVerificationID || "Not provided"}
                   />
                 </div>

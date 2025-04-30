@@ -94,7 +94,7 @@ const Contract = ({ message }) => {
             </div>
 
             <div className="text-center text-sm text-gray-500">
-              Property Legal Document ID: {legalDocumentId}
+              Property Aadhar Number: {legalDocumentId}
             </div>
           </div>
 

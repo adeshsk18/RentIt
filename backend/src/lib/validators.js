@@ -59,7 +59,7 @@ export const validatePropertyAndUser = async (propertyId, user) => {
 export const validateImages = (length) => {
   if (length < 3 || length > 10) {
     throw new ValidationError(
-      `You must provide between 3 and 10 images. You provided ${length}.`
+      `You must provide between 1 and 10 images. You provided ${length}.`
     );
   }
 };
@@ -79,7 +79,7 @@ export const validateLegaldocId = async (legalDocId) => {
 
   if (prop) {
     throw new ValidationError(
-      "Given Legal Document ID already exists and is not belong to your property."
+      "Given Aadhar Number already exists and is not belong to your property."
     );
   }
   return trimmedID;

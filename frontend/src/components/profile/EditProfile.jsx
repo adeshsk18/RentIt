@@ -138,13 +138,13 @@ const EditProfile = ({ userData, onUpdate, setIsEditing }) => {
                 </div>
               </FormField>
 
-              <FormField label="Legal Verification ID">
+              <FormField label="Aadhar Number">
                 <Input
                   name="legalVerificationID"
                   value={formData.legalVerificationID}
                   onChange={handleChange}
                   disabled={disableVerIn}
-                  placeholder={"Enter verification ID"}
+                  placeholder={"Enter Aadhar Number"}
                 />
               </FormField>
             </div>

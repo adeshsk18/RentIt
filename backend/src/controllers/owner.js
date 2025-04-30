@@ -114,7 +114,7 @@ export const updateProperty = controllerWrapper(async (req, res) => {
 
   if (req.body.legalDocumentId && property.legalDocumentId) {
     throw new ValidationError(
-      "Can not change Legal Document ID after it is verified & approved."
+      "Can not change Aadhar Number after it is verified & approved."
     );
   }
 

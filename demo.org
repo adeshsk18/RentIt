@@ -55,7 +55,7 @@ Admins can review all owner requests in the admin panel. They will then approve 
 To add a property, fill in the required details.
 
 ** Manual Approval
-If a valid legal document ID is provided, the property will be approved automatically. Otherwise, the property will be put on a waiting list for admin approval.
+If a valid Aadhar Number is provided, the property will be approved automatically. Otherwise, the property will be put on a waiting list for admin approval.
 
 ** Adding Property using LegalDocId
 
@@ -68,7 +68,7 @@ Admins can review and approve property listings in the "Properties" section of t
 
 
 * Updating Property
-If a property does not have a valid legal document ID, it will be put on a waiting list after any major changes (e.g., rent, number of bedrooms, property type). If the property has a valid legal document ID, it will be automatically approved after edits.
+If a property does not have a valid Aadhar Number, it will be put on a waiting list after any major changes (e.g., rent, number of bedrooms, property type). If the property has a valid Aadhar Number, it will be automatically approved after edits.
 
 
 * Finalizing Agreement

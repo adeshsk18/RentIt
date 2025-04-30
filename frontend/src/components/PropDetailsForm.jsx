@@ -174,7 +174,7 @@ const DetailsInput = ({ formData, setFormData, disableDocIn }) => {
             onChange={handleInputChange}
             className="pl-10"
             fullWidth
-            label="Legal Document ID"
+            label="Aadhar Number"
             disabled={disableDocIn}
           />
         </div>
@@ -230,6 +230,7 @@ const ImagesSelect = ({ imageFiles, setImageFiles, setRemoveImages }) => {
       <label className="flex h-32 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-4 transition-colors hover:border-gray-400">
         <Upload className="h-8 w-8 text-gray-400" />
         <span className="mt-2 text-sm text-gray-500">Upload Images</span>
+        <span className="mt-1 text-xs text-gray-400">(Max size: 400 KB per image)</span>
         <input
           type="file"
           accept="image/*"

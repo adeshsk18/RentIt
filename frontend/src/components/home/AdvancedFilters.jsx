@@ -9,19 +9,13 @@ import {
 import { BedDouble, IndianRupee, X } from "lucide-react";
 import React, { useState } from "react";
 
-import AmenitiesSelect from "../frags/AminitiesSelect";
-import PropertyTypeSelect from "../frags/ProptypeSelect";
-
 // Default filter values
 const defaultFilters = {
   priceRange: [1000, 40000],
   numberOfBedrooms: 1,
-  propertyType: "",
-  amenities: [],
 };
 
 const AdvancedFilters = ({ handleSearch }) => {
-  const [isAmenitiesOpen, setAmenitiesOpen] = useState(false);
   const [filters, setFilters] = useState(defaultFilters);
   const minPriceDiff = 2000;
 
@@ -48,7 +42,7 @@ const AdvancedFilters = ({ handleSearch }) => {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">Advanced Search</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Search Filters</h2>
         <Button
           variant="text"
           startIcon={<X className="h-4 w-4" />}
@@ -59,11 +53,11 @@ const AdvancedFilters = ({ handleSearch }) => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {/* Price Range */}
         <div className="space-y-2">
           <Typography variant="body1" className="font-medium text-gray-700">
-            Price Range
+            Monthly Rent
           </Typography>
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <IndianRupee className="h-4 w-4" />
@@ -88,98 +82,19 @@ const AdvancedFilters = ({ handleSearch }) => {
           <Typography variant="body1" className="font-medium text-gray-700">
             Bedrooms
           </Typography>
-          <div className="flex items-center gap-2">
-            <BedDouble className="h-5 w-5 text-gray-500" />
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() =>
-                  setFilters({
-                    ...filters,
-                    numberOfBedrooms: Math.max(0, filters.numberOfBedrooms - 1),
-                  })
-                }
-              >
-                -
-              </Button>
-              <span className="w-8 text-center font-medium">
-                {filters.numberOfBedrooms}
-              </span>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() =>
-                  setFilters({
-                    ...filters,
-                    numberOfBedrooms: Math.min(7, filters.numberOfBedrooms + 1),
-                  })
-                }
-              >
-                +
-              </Button>
-            </div>
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <BedDouble className="h-4 w-4" />
+            <span>{filters.numberOfBedrooms} Bedroom{filters.numberOfBedrooms !== 1 ? 's' : ''}</span>
           </div>
-        </div>
-
-        {/* Property Type */}
-        <div className="space-y-2">
-          <Typography variant="body1" className="font-medium text-gray-700">
-            Property Type
-          </Typography>
-          <PropertyTypeSelect
-            formData={filters}
-            handleChange={(e) =>
-              setFilters({ ...filters, propertyType: e.target.value })
-            }
-            useAll={true}
-            required={false}
+          <Slider
+            value={filters.numberOfBedrooms}
+            min={1}
+            max={7}
+            step={1}
+            onChange={(_, newValue) => setFilters({ ...filters, numberOfBedrooms: newValue })}
+            valueLabelDisplay="auto"
+            valueLabelFormat={(value) => `${value} Bedroom${value !== 1 ? 's' : ''}`}
           />
-        </div>
-
-        {/* Amenities */}
-        <div className="space-y-2">
-          <Typography variant="body1" className="font-medium text-gray-700">
-            Amenities
-          </Typography>
-          <Button
-            variant="outlined"
-            onClick={() => setAmenitiesOpen(true)}
-            className="w-full justify-start"
-          >
-            <span className="my-1 h-5 font-medium">
-              {filters.amenities.length === 0
-                ? "Select Amenities"
-                : `${filters.amenities.length} Selected`}
-            </span>
-          </Button>
-          <Dialog open={isAmenitiesOpen} onClose={() => setAmenitiesOpen(false)}>
-            <DialogContent>
-              <DialogTitle variant="h6" className="flex items-center gap-2">
-                <Typography variant="inherit" className="flex items-center gap-2">
-                  Select Amenities
-                </Typography>
-              </DialogTitle>
-              <AmenitiesSelect formData={filters} setFormData={setFilters} />
-              <div className="mt-5 flex justify-end gap-4">
-                <Button
-                  type="button"
-                  variant="text"
-                  disabled={filters.amenities.length === 0}
-                  onClick={() => setFilters({ ...filters, amenities: [] })}
-                >
-                  Clear All
-                </Button>
-                <Button
-                  type="button"
-                  variant="outlined"
-                  onClick={() => setAmenitiesOpen(false)}
-                >
-                  Close
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
         </div>
       </div>
 
