@@ -190,7 +190,7 @@ const AdminPanel = () => {
                       </div>
                       <div className="mt-4">
                         <p className="text-sm text-gray-500">
-                          Price: ${property.rent}
+                          Price: ₹{property.rent}
                         </p>
                         <p className="text-sm text-gray-500">
                           Type: {property.propertyType}

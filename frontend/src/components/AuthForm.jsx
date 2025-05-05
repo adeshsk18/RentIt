@@ -4,6 +4,8 @@ import { FaHome } from "react-icons/fa";
 import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 import { MdSecurity, MdVerified } from "react-icons/md";
 import { useState } from "react";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const AuthForm = ({
   formData,
@@ -117,14 +119,15 @@ const AuthForm = ({
                 <label className="block text-gray-700 text-xs font-medium mb-1">
                   Contact Number
                 </label>
-                <input
-                  type="tel"
-                  name="contactNumber"
-                  placeholder="+91 1234567890"
-                  value={formData.contactNumber || ""}
-                  onChange={handleChange}
+                <PhoneInput
+                  country={'in'}
+                  value={formData.contactNumber}
+                  onChange={phone => setFormData(prev => ({ ...prev, contactNumber: phone }))}
+                  inputClass="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  inputStyle={{ width: '100%' }}
+                  specialLabel=""
+                  enableSearch
                   required
-                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                 />
               </div>
             )}
