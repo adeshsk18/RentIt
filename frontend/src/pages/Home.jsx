@@ -93,6 +93,29 @@ const Home = () => {
               Discover the perfect space that feels like home. Browse through our curated collection of premium rental properties.
             </p>
             
+            {/* Location Search Box */}
+            <div className="mx-auto mb-8 max-w-2xl">
+              <div className="flex items-center gap-2 rounded-lg bg-white/10 p-2 backdrop-blur-sm">
+                <div className="flex flex-1 items-center gap-2 rounded-lg bg-white/5 px-4 py-2">
+                  <MapPin className="h-5 w-5 text-gray-300" />
+                  <input
+                    type="text"
+                    placeholder="Enter location..."
+                    value={filters.address}
+                    onChange={(e) => setFilters(prev => ({ ...prev, address: e.target.value }))}
+                    className="w-full bg-transparent text-white placeholder-gray-300 focus:outline-none"
+                  />
+                </div>
+                <button
+                  onClick={() => handleSearch(filters, true)}
+                  className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700"
+                >
+                  <Search className="h-5 w-5" />
+                  Search
+                </button>
+              </div>
+            </div>
+
             <button
               onClick={() => {
                 handleSearch({}, true);

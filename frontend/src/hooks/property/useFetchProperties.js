@@ -12,7 +12,9 @@ const useFetchProperties = () => {
     
     // Only add filters that are explicitly set
     if (filter.address?.trim()) {
-      params.append('address', filter.address.trim());
+      const addressValue = filter.address.trim();
+      params.append('address', addressValue);
+      console.log("Frontend sending address:", addressValue);
     }
     
     if (filter.propertyType?.trim()) {
@@ -31,22 +33,23 @@ const useFetchProperties = () => {
       params.append('amenities', filter.amenities.join(','));
     }
 
-    if (!loading) {
-      setLoading(true);
-      try {
-        const response = await api.get(`/list/filter?${params}`);
-        if (response.data.message?.startsWith("Ple")) {
-          toast.warn(response.data.message);
-        }
-        return response.data.properties || [];
-      } catch (error) {
-        toast.error(getResponseMsg(error));
-        return [];
-      } finally {
-        setLoading(false);
+    setLoading(true);
+    try {
+      const url = `/list/filter?${params}`;
+      console.log("Making request to:", url);
+      const response = await api.get(url);
+      console.log("Search response:", response.data);
+      if (response.data.message?.startsWith("Ple")) {
+        toast.warn(response.data.message);
       }
+      return response.data.properties || [];
+    } catch (error) {
+      console.error("Search error:", error);
+      toast.error(getResponseMsg(error));
+      return [];
+    } finally {
+      setLoading(false);
     }
-    return [];
   };
 
   return { loading, fetchProperties };

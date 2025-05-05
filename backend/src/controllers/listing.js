@@ -25,11 +25,22 @@ export const getFilteredProperties = controllerWrapper(async (req, res) => {
 
   let message = "Properties retrieved successfully.";
 
-  if (address) {
-    // Use text search on the address field
-    const searchRegex = new RegExp(address, 'i');
-    console.log("Searching with regex:", searchRegex);
-    query.address = { $regex: searchRegex };
+  let properties;
+  if (address && address.trim()) {
+    const searchTerm = address.trim().toLowerCase();
+    // Fetch all available properties and filter in JS for substring match
+    properties = await PropertyModel.find(query).select(
+      "-description -listedBy -legalDocumentId -status -isApproved"
+    );
+    properties = properties.filter(p =>
+      p.location && p.location.address &&
+      p.location.address.toLowerCase().includes(searchTerm)
+    );
+    console.log(`Filtered properties by address substring: found ${properties.length}`);
+  } else {
+    properties = await PropertyModel.find(query).select(
+      "-description -listedBy -legalDocumentId -status -isApproved"
+    );
   }
 
   if (propertyType) {
@@ -69,9 +80,10 @@ export const getFilteredProperties = controllerWrapper(async (req, res) => {
 
   console.log("Final query being executed:", JSON.stringify(query, null, 2));
 
-  const properties = await PropertyModel.find(query).select(
-    "-description -listedBy -legalDocumentId -status -isApproved"
-  );
+  // Log the first few properties found to verify the search
+  if (properties.length > 0) {
+    console.log("Sample property addresses found:", properties.slice(0, 3).map(p => p.location.address));
+  }
 
   console.log(`Found ${properties.length} properties matching the query`);
 
