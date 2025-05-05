@@ -7,17 +7,30 @@ import {
   Typography,
 } from "@mui/material";
 import { BedDouble, IndianRupee, X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { availablePropertyTypes } from "../../constanst";
 
 // Default filter values
 const defaultFilters = {
+  propertyType: "",
   priceRange: [1000, 40000],
   numberOfBedrooms: 1,
 };
 
 const AdvancedFilters = ({ handleSearch }) => {
   const [filters, setFilters] = useState(defaultFilters);
+  const [hasModifiedFilters, setHasModifiedFilters] = useState(false);
   const minPriceDiff = 2000;
+
+  // Check if any filter has been modified from its default value
+  useEffect(() => {
+    const isModified = 
+      filters.propertyType !== defaultFilters.propertyType ||
+      JSON.stringify(filters.priceRange) !== JSON.stringify(defaultFilters.priceRange) ||
+      filters.numberOfBedrooms !== defaultFilters.numberOfBedrooms;
+    
+    setHasModifiedFilters(isModified);
+  }, [filters]);
 
   const handlePriceRangeChange = (_, newValue) => {
     if (!Array.isArray(newValue)) return;
@@ -37,20 +50,24 @@ const AdvancedFilters = ({ handleSearch }) => {
   const clearFilters = () => {
     setFilters(defaultFilters);
     handleSearch(defaultFilters);
+    // Reload the page after clearing filters
+    window.location.reload();
   };
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">Search Filters</h2>
-        <Button
-          variant="text"
-          startIcon={<X className="h-4 w-4" />}
-          onClick={clearFilters}
-          className="text-gray-500 hover:text-gray-700 transition-opacity"
-        >
-          Clear Filters
-        </Button>
+        {hasModifiedFilters && (
+          <Button
+            variant="text"
+            startIcon={<X className="h-4 w-4" />}
+            onClick={clearFilters}
+            className="text-gray-500 hover:text-gray-700 transition-opacity"
+          >
+            Clear Filters
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
