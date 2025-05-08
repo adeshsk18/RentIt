@@ -1,14 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { ChevronDown, Home as HomeIcon, MapPin, Search, Compass, ArrowUp } from "lucide-react";
-import { toast } from "react-toastify";
+import { MapPin, Search, Compass, ArrowUp } from "lucide-react";
 
 import PropertiesGrid from "../components/PropertiesGrid";
 import Loading from "../components/blocks/loading";
 import NoListings from "../components/blocks/noListings";
 import AdvancedFilters from "../components/home/AdvancedFilters";
-import PropertyTypeSelect from "../components/frags/ProptypeSelect";
 import Footer from "../components/Footer";
-import { availablePropertyTypes } from "../constanst";
 import useFetchProperties from "../hooks/property/useFetchProperties";
 
 const Home = () => {
@@ -16,10 +13,6 @@ const Home = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [filters, setFilters] = useState({
     address: "",
-    propertyType: "",
-    priceRange: [1000, 40000],
-    numberOfBedrooms: 1,
-    amenities: [],
   });
 
   const { loading, fetchProperties } = useFetchProperties();
@@ -69,8 +62,6 @@ const Home = () => {
     handleSearch({}, false);
   }, []);
 
-  const showLoading = loading;
-
   return (
     <div>
       {/* Hero Section */}
@@ -101,7 +92,7 @@ const Home = () => {
                   <MapPin className="h-5 w-5 text-gray-300" />
                   <input
                     type="text"
-                    placeholder="Enter location..."
+                    placeholder="Search by address..."
                     value={filters.address}
                     onChange={(e) => setFilters(prev => ({ ...prev, address: e.target.value }))}
                     className="w-full bg-transparent text-white placeholder-gray-300 focus:outline-none"
@@ -125,7 +116,7 @@ const Home = () => {
               className="group inline-flex items-center justify-center gap-2 rounded-lg border-2 border-white bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent"
             >
               <Compass className="h-5 w-5 transition-transform group-hover:rotate-45" />
-              Explore All Properties
+              View All Properties
             </button>
           </div>
         </div>
@@ -134,13 +125,9 @@ const Home = () => {
       {/* Results Section */}
       <div id="properties-section" className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 gap-6">
-          <AdvancedFilters
-            filters={filters}
-            setFilters={setFilters}
-            handleSearch={handleSearch}
-          />
+          <AdvancedFilters handleSearch={handleSearch} />
 
-          {showLoading ? (
+          {loading ? (
             <div className="flex justify-center">
               <Loading />
             </div>

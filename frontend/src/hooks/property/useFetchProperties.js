@@ -10,27 +10,23 @@ const useFetchProperties = () => {
   const fetchProperties = async (filter = {}) => {
     const params = new URLSearchParams();
     
-    // Only add filters that are explicitly set
+    // Add address filter if it's set
     if (filter.address?.trim()) {
       const addressValue = filter.address.trim();
       params.append('address', addressValue);
       console.log("Frontend sending address:", addressValue);
     }
-    
-    if (filter.propertyType?.trim()) {
-      params.append('propertyType', filter.propertyType.trim());
-    }
-    
+
+    // Add price range filter if it's set
     if (Array.isArray(filter.priceRange) && filter.priceRange.length === 2) {
       params.append('priceRange', filter.priceRange.join(','));
+      console.log("Frontend sending price range:", filter.priceRange);
     }
-    
+
+    // Add number of bedrooms filter if it's set
     if (filter.numberOfBedrooms !== undefined && filter.numberOfBedrooms !== null) {
       params.append('numberOfBedrooms', filter.numberOfBedrooms);
-    }
-    
-    if (Array.isArray(filter.amenities) && filter.amenities.length > 0) {
-      params.append('amenities', filter.amenities.join(','));
+      console.log("Frontend sending number of bedrooms:", filter.numberOfBedrooms);
     }
 
     setLoading(true);

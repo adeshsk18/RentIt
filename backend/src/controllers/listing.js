@@ -8,53 +8,43 @@ import { RequestModel } from "../models/propertyRequest.js";
 import { UserModel } from "../models/user.js";
 
 export const getFilteredProperties = controllerWrapper(async (req, res) => {
-  const {
-    address,
-    propertyType,
-    priceRange,
-    numberOfBedrooms,
-    amenities,
-  } = req.query;
+  const { address, priceRange, numberOfBedrooms } = req.query;
   const { userId } = req.body;
 
-  console.log("Search query received:", { address, propertyType, priceRange, numberOfBedrooms, amenities });
+  console.log("Search query received:", { address, priceRange, numberOfBedrooms });
 
   const query = {
     status: "available",
   };
 
-  let message = "Properties retrieved successfully.";
-
-  // Apply property type filter
-  if (propertyType) {
-    const propt = propertyType.toLowerCase().trim();
-    query.propertyType = propt;
+  // Add address search with case-insensitive partial matching
+  if (address && address.trim()) {
+    query["location.address"] = {
+      $regex: address.trim(),
+      $options: "i"
+    };
   }
 
-  // Price range filter
+  // Add price range filter
   if (priceRange) {
     const [minPrice, maxPrice] = priceRange.split(",").map(Number);
     if (!isNaN(minPrice) && !isNaN(maxPrice)) {
-      query.rent = { $gte: minPrice, $lte: maxPrice };
+      query.rent = { 
+        $gte: minPrice,
+        $lte: maxPrice
+      };
     }
   }
 
-  // Bedrooms filter - exact match
+  // Add number of bedrooms filter
   if (numberOfBedrooms) {
-    const numBedrooms = Number(numberOfBedrooms);
-    if (!isNaN(numBedrooms)) {
-      query.numberOfBedrooms = numBedrooms;
+    const bedrooms = Number(numberOfBedrooms);
+    if (!isNaN(bedrooms)) {
+      query.numberOfBedrooms = bedrooms;
     }
   }
 
-  // Amenities filter
-  if (amenities) {
-    const amenitiesList = amenities.toLowerCase().split(",").filter(a => a.trim() !== "");
-    if (amenitiesList.length > 0) {
-      query.amenities = { $all: amenitiesList };
-    }
-  }
-
+  // Exclude properties already requested by the user
   if (userId) {
     const requests = await RequestModel.find({ requesterID: userId });
     const requestedPropertyIds = requests.map((request) => request.propertyId);
@@ -63,27 +53,15 @@ export const getFilteredProperties = controllerWrapper(async (req, res) => {
 
   console.log("Final query being executed:", JSON.stringify(query, null, 2));
 
-  // Execute the query with all filters
   const properties = await PropertyModel.find(query).select(
     "-description -listedBy -legalDocumentId -status -isApproved"
   );
 
-  // Apply address filter after fetching properties if needed
-  let filteredProperties = properties;
-  if (address && address.trim()) {
-    const searchTerm = address.trim().toLowerCase();
-    filteredProperties = properties.filter(p =>
-      p.location && p.location.address &&
-      p.location.address.toLowerCase().includes(searchTerm)
-    );
-    console.log(`Filtered properties by address substring: found ${filteredProperties.length}`);
-  }
-
-  console.log(`Found ${filteredProperties.length} properties matching the query`);
+  console.log(`Found ${properties.length} properties matching the query`);
 
   res.status(200).json({
-    message,
-    properties: filteredProperties,
+    message: "Properties retrieved successfully",
+    properties,
   });
 });
 
