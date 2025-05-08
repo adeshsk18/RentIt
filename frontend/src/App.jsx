@@ -119,6 +119,7 @@ const AppContent = () => {
             userData?.type === "admin" ? <AdminPanel /> : <Navigate to="/" />
           }
         />
+        <Route path="/admin-verification" element={<AdminVerification />} />
       </Routes>
     </>
   );

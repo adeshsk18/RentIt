@@ -25,24 +25,7 @@ export const getFilteredProperties = controllerWrapper(async (req, res) => {
 
   let message = "Properties retrieved successfully.";
 
-  let properties;
-  if (address && address.trim()) {
-    const searchTerm = address.trim().toLowerCase();
-    // Fetch all available properties and filter in JS for substring match
-    properties = await PropertyModel.find(query).select(
-      "-description -listedBy -legalDocumentId -status -isApproved"
-    );
-    properties = properties.filter(p =>
-      p.location && p.location.address &&
-      p.location.address.toLowerCase().includes(searchTerm)
-    );
-    console.log(`Filtered properties by address substring: found ${properties.length}`);
-  } else {
-    properties = await PropertyModel.find(query).select(
-      "-description -listedBy -legalDocumentId -status -isApproved"
-    );
-  }
-
+  // Apply property type filter
   if (propertyType) {
     const propt = propertyType.toLowerCase().trim();
     query.propertyType = propt;
@@ -60,7 +43,7 @@ export const getFilteredProperties = controllerWrapper(async (req, res) => {
   if (numberOfBedrooms) {
     const numBedrooms = Number(numberOfBedrooms);
     if (!isNaN(numBedrooms)) {
-      query.numberOfBedrooms = numBedrooms; // Exact match
+      query.numberOfBedrooms = numBedrooms;
     }
   }
 
@@ -80,16 +63,27 @@ export const getFilteredProperties = controllerWrapper(async (req, res) => {
 
   console.log("Final query being executed:", JSON.stringify(query, null, 2));
 
-  // Log the first few properties found to verify the search
-  if (properties.length > 0) {
-    console.log("Sample property addresses found:", properties.slice(0, 3).map(p => p.location.address));
+  // Execute the query with all filters
+  const properties = await PropertyModel.find(query).select(
+    "-description -listedBy -legalDocumentId -status -isApproved"
+  );
+
+  // Apply address filter after fetching properties if needed
+  let filteredProperties = properties;
+  if (address && address.trim()) {
+    const searchTerm = address.trim().toLowerCase();
+    filteredProperties = properties.filter(p =>
+      p.location && p.location.address &&
+      p.location.address.toLowerCase().includes(searchTerm)
+    );
+    console.log(`Filtered properties by address substring: found ${filteredProperties.length}`);
   }
 
-  console.log(`Found ${properties.length} properties matching the query`);
+  console.log(`Found ${filteredProperties.length} properties matching the query`);
 
   res.status(200).json({
     message,
-    properties,
+    properties: filteredProperties,
   });
 });
 

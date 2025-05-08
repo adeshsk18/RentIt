@@ -39,8 +39,24 @@ export const loginUser = controllerWrapper(async (req, res) => {
   const user = await UserModel.findOne({ email });
 
   if (user && (await user.comparePassword(password))) {
+    // If user is admin, generate a temporary token for second factor auth
+    if (user.type === 'admin') {
+      const tempToken = jwt.sign(
+        { id: user._id, type: 'temp' },
+        process.env.JWT_SECRET,
+        { expiresIn: '5m' }
+      );
+      
+      return res.status(200).json({
+        message: "Admin verification required",
+        tempToken,
+        isAdmin: true
+      });
+    }
+
+    // For non-admin users, proceed with normal login
     res.status(200).json({
-      message: "User Loged in.",
+      message: "User Logged in.",
       token: user.getJWTToken(),
       userData: {
         uid: user._id,
@@ -50,6 +66,61 @@ export const loginUser = controllerWrapper(async (req, res) => {
     });
   } else {
     throw new ValidationError("Invalid Credentials");
+  }
+});
+
+export const verifyAdmin = controllerWrapper(async (req, res) => {
+  const { tempToken, adminPassphrase } = req.body;
+
+  console.log('Received verify-admin request:', {
+    hasTempToken: !!tempToken,
+    hasPassphrase: !!adminPassphrase,
+    expectedPassphrase: process.env.ADMIN_PASSPHRASE
+  });
+
+  if (!tempToken || !adminPassphrase) {
+    throw new ValidationError("Missing required fields");
+  }
+
+  try {
+    // Verify the temporary token
+    const decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+    console.log('Decoded token:', decoded);
+
+    if (decoded.type !== 'temp') {
+      throw new ValidationError("Invalid token");
+    }
+
+    const user = await UserModel.findById(decoded.id);
+    if (!user || user.type !== 'admin') {
+      throw new ValidationError("Invalid user");
+    }
+
+    // Verify the admin passphrase
+    if (adminPassphrase !== process.env.ADMIN_PASSPHRASE) {
+      console.log('Passphrase mismatch:', {
+        received: adminPassphrase,
+        expected: process.env.ADMIN_PASSPHRASE
+      });
+      throw new ValidationError("Invalid admin passphrase");
+    }
+
+    // Generate the final token
+    res.status(200).json({
+      message: "Admin verification successful",
+      token: user.getJWTToken(),
+      userData: {
+        uid: user._id,
+        type: user.type,
+        name: user.name
+      },
+    });
+  } catch (error) {
+    console.error('Error in verifyAdmin:', error);
+    if (error.name === 'JsonWebTokenError') {
+      throw new ValidationError("Invalid or expired token");
+    }
+    throw error;
   }
 });
 
