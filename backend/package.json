@@ -6,7 +6,8 @@
   "scripts": {
     "start": "DEV_MODE='' node src/server.js",
     "dev": "DEV_MODE='yes' nodemon src/server.js",
-    "build": "echo 'No Build'" 
+    "build": "echo 'No Build'",
+    "init-db": "node src/scripts/initDb.js"
   },
   "keywords": [],
   "author": "",

@@ -4,15 +4,29 @@ import { UserModel } from '../models/user.js';
 
 dotenv.config();
 
-const createAdminUser = async () => {
+const checkAdminExists = async () => {
+  try {
+    const admin = await UserModel.findOne({ type: 'admin' });
+    return !!admin;
+  } catch (error) {
+    console.error('Error checking admin existence:', error);
+    return false;
+  }
+};
+
+export const createAdminUser = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
       dbName: "appdata"
     });
     console.log('Connected to MongoDB');
 
-    // Delete any existing admin user first
-    await UserModel.deleteOne({ email: 'admin@rentit.com' });
+    // Check if admin already exists
+    const adminExists = await checkAdminExists();
+    if (adminExists) {
+      console.log('Admin user already exists');
+      return;
+    }
 
     const adminData = {
       username: 'admin123',
@@ -27,7 +41,7 @@ const createAdminUser = async () => {
     
     console.log('Admin user created successfully');
     console.log('Email:', adminData.email);
-    console.log('Password: Admin@123');
+    console.log('Password:', adminData.password);
   } catch (error) {
     console.error('Error creating admin user:', error);
   } finally {
@@ -35,4 +49,5 @@ const createAdminUser = async () => {
   }
 };
 
+// Execute the function
 createAdminUser(); 

@@ -7,6 +7,7 @@ import Loading from "../components/blocks/loading";
 import NoListings from "../components/blocks/noListings";
 import AdvancedFilters from "../components/home/AdvancedFilters";
 import PropertyTypeSelect from "../components/frags/ProptypeSelect";
+import Footer from "../components/Footer";
 import { availablePropertyTypes } from "../constanst";
 import useFetchProperties from "../hooks/property/useFetchProperties";
 
@@ -161,6 +162,9 @@ const Home = () => {
           <ArrowUp className="h-6 w-6" />
         </button>
       )}
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
