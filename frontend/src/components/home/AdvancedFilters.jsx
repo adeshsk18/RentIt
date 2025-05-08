@@ -1,15 +1,13 @@
 import {
   Button,
-  TextField,
   Slider,
   Typography,
   Grid,
 } from "@mui/material";
-import { Search, X, BedDouble, IndianRupee } from "lucide-react";
+import { X, BedDouble, IndianRupee } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
 const defaultFilters = {
-  address: "",
   priceRange: [1000, 40000],
   numberOfBedrooms: 1,
 };
@@ -21,7 +19,6 @@ const AdvancedFilters = ({ handleSearch }) => {
 
   useEffect(() => {
     const isModified = 
-      filters.address !== defaultFilters.address ||
       JSON.stringify(filters.priceRange) !== JSON.stringify(defaultFilters.priceRange) ||
       filters.numberOfBedrooms !== defaultFilters.numberOfBedrooms;
     setHasModifiedFilters(isModified);
@@ -31,10 +28,6 @@ const AdvancedFilters = ({ handleSearch }) => {
     setFilters(defaultFilters);
     handleSearch(defaultFilters);
     window.location.reload();
-  };
-
-  const handleAddressChange = (event) => {
-    setFilters({ ...filters, address: event.target.value });
   };
 
   const handlePriceRangeChange = (_, newValue) => {
@@ -60,7 +53,7 @@ const AdvancedFilters = ({ handleSearch }) => {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">Property Search</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Filter Properties</h2>
         {hasModifiedFilters && (
           <Button
             variant="text"
@@ -68,25 +61,12 @@ const AdvancedFilters = ({ handleSearch }) => {
             onClick={clearFilters}
             className="text-gray-500 hover:text-gray-700 transition-opacity"
           >
-            Clear Search
+            Clear Filters
           </Button>
         )}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Address Search */}
-        <TextField
-          fullWidth
-          label="Search by Address"
-          variant="outlined"
-          value={filters.address}
-          onChange={handleAddressChange}
-          placeholder="Enter street address, city, or area..."
-          InputProps={{
-            startAdornment: <Search className="h-5 w-5 text-gray-400 mr-2" />,
-          }}
-        />
-
         <Grid container spacing={3}>
           {/* Price Range */}
           <Grid item xs={12} md={6}>
@@ -139,7 +119,7 @@ const AdvancedFilters = ({ handleSearch }) => {
             variant="contained"
             className="px-6"
           >
-            Search Properties
+            Apply Filters
           </Button>
         </div>
       </form>
