@@ -1,9 +1,20 @@
 import React from "react";
 import { Card, CardContent, Typography } from "@mui/material";
+import { FaHome } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Terms = () => {
   return (
     <div className="mx-auto max-w-4xl p-4">
+      {/* Back to Home Button */}
+      <Link
+        to="/"
+        className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+      >
+        <FaHome className="text-lg" />
+        <span>Back to Home</span>
+      </Link>
+
       <Card className="rounded-xl bg-white shadow-lg">
         <CardContent>
           <Typography variant="h4" className="mb-6 text-center font-bold">

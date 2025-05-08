@@ -60,7 +60,7 @@ const AppContent = () => {
   if (loading) return <Loading />;
 
   // Don't show navbar on login and register pages
-  const hideNavbar = ['/login', '/register', '/forgot-password', '/reset-password'].includes(location.pathname);
+  const hideNavbar = ['/login', '/register', '/forgot-password', '/reset-password', '/admin-verification'].includes(location.pathname);
 
   return (
     <>
@@ -119,7 +119,6 @@ const AppContent = () => {
             userData?.type === "admin" ? <AdminPanel /> : <Navigate to="/" />
           }
         />
-        <Route path="/admin-verification" element={<AdminVerification />} />
       </Routes>
     </>
   );
@@ -132,8 +131,8 @@ function App() {
         <AppContent />
       </Router>
       <ToastContainer
-        position="top-right"
-        autoClose={1500}
+        position="bottom-right"
+        autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
