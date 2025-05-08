@@ -116,7 +116,7 @@ const Home = () => {
               className="group inline-flex items-center justify-center gap-2 rounded-lg border-2 border-white bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent"
             >
               <Compass className="h-5 w-5 transition-transform group-hover:rotate-45" />
-              View All Properties
+              Explore All Properties
             </button>
           </div>
         </div>

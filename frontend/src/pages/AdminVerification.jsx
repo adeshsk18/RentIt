@@ -68,7 +68,8 @@ const AdminVerification = () => {
         toast.error("Session expired. Please login again.");
         navigate("/login");
       } else {
-        toast.error(getResponseMsg(error) || "Login Failed");
+        // Generic error message for all other cases
+        toast.error("Login Failed");
       }
     } finally {
       setLoading(false);
