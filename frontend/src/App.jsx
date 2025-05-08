@@ -13,9 +13,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Loading from "./components/blocks/loading";
 import Navbar from "./components/navbar";
+import Footer from "./components/Footer";
 import useFetchRequests from "./hooks/chat/useFetchRequests";
 import AddProperty from "./pages/AddProperty";
 import AdminPanel from "./pages/AdminPanel";
+import AdminVerification from "./pages/AdminVerification";
 import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import Listing from "./pages/Listing";
@@ -23,8 +25,10 @@ import Login from "./pages/Login";
 import MyProfile from "./pages/MyProfile";
 import MyProperties from "./pages/MyProperties";
 import MyRequests from "./pages/MyRequests";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Register from "./pages/Register";
 import ResetPassword from "./pages/ResetPassword";
+import Terms from "./pages/Terms";
 import UDProperty from "./pages/UDProperty";
 import PublicUserProfile from "./pages/UserPage";
 import useAuthStore from "./stores/useAuthStore";
@@ -79,10 +83,16 @@ const AppContent = () => {
           path="/reset-password/:token"
           element={userData ? <Navigate to="/" /> : <ResetPassword />}
         />
+        <Route
+          path="/admin-verification"
+          element={userData ? <Navigate to="/" /> : <AdminVerification />}
+        />
         <Route path="/profile" element={<MyProfile />} />
         <Route path="/requests" element={<MyRequests />} />
         <Route path="/u/:userId" element={<PublicUserProfile />} />
         <Route path="/listing/:propertyId" element={<Listing />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<Terms />} />
 
         <Route
           path="/properties"

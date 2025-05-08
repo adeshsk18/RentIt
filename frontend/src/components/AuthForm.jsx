@@ -152,6 +152,18 @@ const AuthForm = ({
                 {name === "Login" ? "Sign Up" : "Sign In"}
               </Link>
             </div>
+
+            {/* Legal Links */}
+            <div className="mt-4 text-center text-xs text-gray-500">
+              By {name === "Login" ? "signing in" : "creating an account"}, you agree to our{" "}
+              <Link to="/terms" className="text-blue-600 hover:text-blue-700">
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link to="/privacy-policy" className="text-blue-600 hover:text-blue-700">
+                Privacy Policy
+              </Link>
+            </div>
           </form>
         </div>
 
